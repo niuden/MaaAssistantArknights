@@ -70,25 +70,13 @@
 
                                     <CheckBox
                                         Grid.Column="0"
+                                        MaxWidth="140"
                                         HorizontalAlignment="Left"
-                                        Content="{Binding Name}"
                                         IsChecked="{Binding IsCheckedWithNull}"
                                         IsHitTestVisible="{Binding ElementName=TaskList, Path=DataContext.Idle}"
                                         MouseRightButtonUp="{s:Action ToggleCheckBoxNullOnRightClick,
                                                                       Target={x:Type helper:CheckBoxHelper}}">
-                                        <CheckBox.Style>
-                                            <Style BasedOn="{StaticResource CheckBoxBaseStyle}" TargetType="{x:Type CheckBox}">
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding Source={x:Static setting:SettingsViewModel.GuiSettings}, Path=MainTasksInvertNullFunction}" Value="True" />
-                                                            <Condition Binding="{Binding IsCheckedWithNull}" Value="{x:Null}" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Foreground" Value="{DynamicResource TraceLogBrush}" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </CheckBox.Style>
+                                        <controls:TextBlock Text="{Binding Name}" Visibility="Hidden" />
                                         <CheckBox.ToolTip>
                                             <ToolTip>
                                                 <ToolTip.Style>
@@ -105,7 +93,32 @@
                                         </CheckBox.ToolTip>
                                     </CheckBox>
 
-                                    <hc:ButtonGroup Grid.Column="1" HorizontalAlignment="Stretch">
+                                    <controls:TextBlock
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Margin="22,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        Background="Transparent"
+                                        IsHitTestVisible="False"
+                                        Text="{Binding Name}">
+                                        <TextBlock.Style>
+                                            <Style BasedOn="{StaticResource TextBlockBaseStyle}" TargetType="{x:Type TextBlock}">
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Source={x:Static setting:SettingsViewModel.GuiSettings}, Path=MainTasksInvertNullFunction}" Value="True" />
+                                                            <Condition Binding="{Binding IsCheckedWithNull}" Value="{x:Null}" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Foreground" Value="{DynamicResource TraceLogBrush}" />
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </controls:TextBlock>
+
+                                    <hc:ButtonGroup
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch">
                                         <RadioButton
                                             Margin="0"
                                             HorizontalAlignment="Stretch"
@@ -311,6 +324,7 @@
                     <taskQueue:RoguelikeSettingsUserControl DataContext="{Binding RoguelikeTask}" Visibility="{c:Binding DataContext.TaskSettingVisibilities.AutoRoguelike, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
                     <taskQueue:ReclamationSettingsUserControl DataContext="{Binding ReclamationTask}" Visibility="{c:Binding DataContext.TaskSettingVisibilities.Reclamation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
                     <taskQueue:PostActionUserControl DataContext="{Binding PostActionSetting}" Visibility="{c:Binding DataContext.TaskSettingVisibilities.AfterAction, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                    <taskQueue:CustomUserControl DataContext="{Binding CustomTask}" Visibility="{c:Binding DataContext.TaskSettingVisibilities.Custom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
                 </hc:SimpleStackPanel>
             </hc:ScrollViewer>
             <hc:ButtonGroup

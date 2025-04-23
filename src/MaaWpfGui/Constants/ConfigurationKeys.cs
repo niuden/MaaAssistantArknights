@@ -54,8 +54,11 @@ namespace MaaWpfGui.Constants
         public const string Hangover = "GUI.Hangover";
         public const string LastBuyWineTime = "GUI.LastBuyWineTime";
         public const string CustomCulture = "GUI.CustomCulture";
-        public const string BackgroundOpacity = "GUI.BackgroundOpacity";
-        public const string BackgroundBlurEffectRadius = "GUI.BackgroundBlurEffectRadius";
+
+        public const string BackgroundImagePath = "GUI.Background.ImagePath";
+        public const string BackgroundImageStretchMode = "GUI.Background.StretchMode";
+        public const string BackgroundOpacity = "GUI.Background.Opacity";
+        public const string BackgroundBlurEffectRadius = "GUI.Background.BlurEffectRadius";
 
         public const string AddressHistory = "Connect.AddressHistory";
         public const string AutoDetect = "Connect.AutoDetect";
@@ -250,6 +253,7 @@ namespace MaaWpfGui.Constants
         public const string RemoteControlDeviceIdentity = "RemoteControl.RemoteControlDeviceIdentity";
 
         public const string ExternalNotificationEnabled = "ExternalNotification.Enabled";
+        public const string ExternalNotificationSendWhenComplete = "ExternalNotification.SendWhenComplete";
         public const string ExternalNotificationEnableDetails = "ExternalNotification.EnableDetails";
         public const string ExternalNotificationSendWhenError = "ExternalNotification.SendWhenError";
         public const string ExternalNotificationSmtpServer = "ExternalNotification.Smtp.Server";
@@ -298,6 +302,8 @@ namespace MaaWpfGui.Constants
         public const string ForceScheduledStart = "Timer.ForceScheduledStart";
         public const string ShowWindowBeforeForceScheduledStart = "Timer.ShowWindowBeforeForceScheduledStart";
         public const string CustomConfig = "Timer.CustomConfig";
+
+        public const string DebugTaskName = "Debug.TaskName";
 
         // public const string AnnouncementInfo = "Announcement.AnnouncementInfo";// 已迁移
         // public const string DoNotRemindThisAnnouncementAgain = "Announcement.DoNotRemindThisAnnouncementAgain";// 已迁移

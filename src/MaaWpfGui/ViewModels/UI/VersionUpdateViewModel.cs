@@ -535,6 +535,7 @@ public class VersionUpdateViewModel : Screen
         // 保存新版本的信息
         var name = _latestJson?["name"]?.ToString();
         UpdateTag = string.IsNullOrEmpty(name) ? (_latestJson?["tag_name"]?.ToString() ?? string.Empty) : name;
+        SettingsViewModel.VersionUpdateSettings.NewVersionFoundInfo = $"{LocalizationHelper.GetString("NewVersionFoundTitle")}: {UpdateTag}";
         var body = _latestJson?["body"]?.ToString() ?? string.Empty;
         if (string.IsNullOrEmpty(body))
         {
@@ -729,6 +730,7 @@ public class VersionUpdateViewModel : Screen
 
         UpdateTag = _mirrorcVersionName ?? string.Empty;
         UpdateInfo = _mirrorcReleaseNote ?? string.Empty;
+        SettingsViewModel.VersionUpdateSettings.NewVersionFoundInfo = $"{LocalizationHelper.GetString("NewVersionFoundTitle")}: {UpdateTag}";
 
         bool goDownload = SettingsViewModel.VersionUpdateSettings.AutoDownloadUpdatePackage;
         if (!goDownload)
@@ -979,12 +981,31 @@ public class VersionUpdateViewModel : Screen
             return CheckUpdateRetT.UnknownError;
         }
 
-        if (data["code"]?.ToString() != "0")
+        var errorCode = data["code"]?.ToObject<Enums.MirrorChyanErrorCode>() ?? Enums.MirrorChyanErrorCode.Undivided;
+        if (errorCode != Enums.MirrorChyanErrorCode.Success)
         {
-            var msg = data["msg"]?.ToString();
-            if (!string.IsNullOrEmpty(msg))
+            switch (errorCode)
             {
-                ToastNotification.ShowDirect(msg);
+                case Enums.MirrorChyanErrorCode.KeyExpired:
+                    ToastNotification.ShowDirect(LocalizationHelper.GetString("MirrorChyanCdkExpired"));
+                    break;
+                case Enums.MirrorChyanErrorCode.KeyInvalid:
+                    ToastNotification.ShowDirect(LocalizationHelper.GetString("MirrorChyanCdkInvalid"));
+                    break;
+                case Enums.MirrorChyanErrorCode.ResourceQuotaExhausted:
+                    ToastNotification.ShowDirect(LocalizationHelper.GetString("MirrorChyanCdkQuotaExhausted"));
+                    break;
+                case Enums.MirrorChyanErrorCode.KeyMismatched:
+                    ToastNotification.ShowDirect(LocalizationHelper.GetString("MirrorChyanCdkMismatched"));
+                    break;
+                case Enums.MirrorChyanErrorCode.InvalidParams:
+                case Enums.MirrorChyanErrorCode.ResourceNotFound:
+                case Enums.MirrorChyanErrorCode.InvalidOs:
+                case Enums.MirrorChyanErrorCode.InvalidArch:
+                case Enums.MirrorChyanErrorCode.InvalidChannel:
+                case Enums.MirrorChyanErrorCode.Undivided:
+                    ToastNotification.ShowDirect(data["msg"]?.ToString() ?? LocalizationHelper.GetString("GameResourceFailed"));
+                    break;
             }
 
             return CheckUpdateRetT.UnknownError;

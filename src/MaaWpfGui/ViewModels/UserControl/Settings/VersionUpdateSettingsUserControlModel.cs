@@ -94,6 +94,30 @@ public class VersionUpdateSettingsUserControlModel : PropertyChangedBase
 
     private static string _resourceVersion = _resourceInfo.VersionName;
 
+    private string _newResourceFoundInfo = string.Empty;
+
+    public string NewResourceFoundInfo
+    {
+        get => _newResourceFoundInfo;
+        set
+        {
+            SetAndNotify(ref _newResourceFoundInfo, value);
+            Instances.SettingsViewModel.UpdateWindowTitle();
+        }
+    }
+
+    private string _newVersionFoundInfo = string.Empty;
+
+    public string NewVersionFoundInfo
+    {
+        get => _newVersionFoundInfo;
+        set
+        {
+            SetAndNotify(ref _newVersionFoundInfo, value);
+            Instances.SettingsViewModel.UpdateWindowTitle();
+        }
+    }
+
     /// <summary>
     /// Gets or sets the resource version.
     /// </summary>
@@ -276,8 +300,11 @@ public class VersionUpdateSettingsUserControlModel : PropertyChangedBase
 
             if (value.Length == 24)
             {
-                _ = Instances.VersionUpdateViewModel.VersionUpdateAndAskToRestartAsync();
-                _ = ResourceUpdater.ResourceUpdateAndReloadAsync();
+                Task.Run(async () =>
+                {
+                    await Instances.VersionUpdateViewModel.VersionUpdateAndAskToRestartAsync();
+                    await ResourceUpdater.ResourceUpdateAndReloadAsync();
+                });
             }
 
             value = SimpleEncryptionHelper.Encrypt(value);

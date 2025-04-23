@@ -55,6 +55,10 @@ namespace MaaWpfGui.Main
 
         private static Mutex _mutex;
         private static bool _hasMutex;
+        public const string UiLogFilename = "debug/gui.log";
+        public const string UiLogBakFilename = "debug/gui.bak.log";
+        public const string CoreLogFilename = "debug/asst.log";
+        public const string CoreLogBakFilename = "debug/asst.bak.log";
 
         /// <inheritdoc/>
         /// <remarks>初始化些啥自己加。</remarks>
@@ -66,23 +70,21 @@ namespace MaaWpfGui.Main
                 Directory.CreateDirectory("debug");
             }
 
-            const string LogFilename = "debug/gui.log";
-            const string LogBakFilename = "debug/gui.bak.log";
-            if (File.Exists(LogFilename) && new FileInfo(LogFilename).Length > 4 * 1024 * 1024)
+            if (File.Exists(UiLogFilename) && new FileInfo(UiLogFilename).Length > 4 * 1024 * 1024)
             {
-                if (File.Exists(LogBakFilename))
+                if (File.Exists(UiLogBakFilename))
                 {
-                    File.Delete(LogBakFilename);
+                    File.Delete(UiLogBakFilename);
                 }
 
-                File.Move(LogFilename, LogBakFilename);
+                File.Move(UiLogFilename, UiLogBakFilename);
             }
 
             // Bootstrap serilog
             var loggerConfiguration = new LoggerConfiguration()
                 .WriteTo.Debug(outputTemplate: "[{Timestamp:HH:mm:ss}][{Level:u3}] <{ThreadId}><{ThreadName}> {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File(
-                    LogFilename,
+                    UiLogFilename,
                     outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}][{Level:u3}] <{ThreadId}><{ThreadName}> {Message:lj}{NewLine}{Exception}")
                 .Enrich.FromLogContext()
                 .Enrich.WithThreadId()

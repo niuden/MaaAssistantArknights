@@ -46,7 +46,7 @@ namespace MaaWpfGui.Services
         private static readonly ILogger _logger = Log.ForContext<StageManager>();
 
         // data
-        private Dictionary<string, StageInfo> _stages;
+        private Dictionary<string, StageInfo> _stages = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StageManager"/> class.
@@ -119,11 +119,11 @@ namespace MaaWpfGui.Services
         private static async Task<bool> CheckWebUpdate()
         {
             // Check if we need to update from the web
-            const string LastUpdateTimeFile = "lastUpdateTime.json";
+            const string StageAndTasksUpdateTime = "stageAndTasksUpdateTime.json";
             const string AllFileDownloadCompleteFile = "allFileDownloadComplete.json";
-            JObject localLastUpdatedJson = Instances.MaaApiService.LoadApiCache(LastUpdateTimeFile);
+            JObject localLastUpdatedJson = Instances.MaaApiService.LoadApiCache(StageAndTasksUpdateTime);
             JObject allFileDownloadCompleteJson = Instances.MaaApiService.LoadApiCache(AllFileDownloadCompleteFile);
-            JObject webLastUpdatedJson = await Instances.MaaApiService.RequestMaaApiWithCache(LastUpdateTimeFile).ConfigureAwait(false);
+            JObject webLastUpdatedJson = await Instances.MaaApiService.RequestMaaApiWithCache(StageAndTasksUpdateTime).ConfigureAwait(false);
 
             if (localLastUpdatedJson?["timestamp"] == null || webLastUpdatedJson?["timestamp"] == null)
             {
@@ -158,7 +158,10 @@ namespace MaaWpfGui.Services
                 await Instances.MaaApiService.RequestMaaApiWithCache(tasksPath);
             }
 
-            Instances.AsstProxy.LoadResource();
+            await Task.Run(() =>
+            {
+                Instances.AsstProxy.LoadResource();
+            });
             return activity;
         }
 

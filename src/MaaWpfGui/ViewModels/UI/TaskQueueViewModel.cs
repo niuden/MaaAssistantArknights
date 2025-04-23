@@ -27,6 +27,7 @@ using MaaWpfGui.Extensions;
 using MaaWpfGui.Helper;
 using MaaWpfGui.Main;
 using MaaWpfGui.Models;
+using MaaWpfGui.Models.AsstTasks;
 using MaaWpfGui.Services;
 using MaaWpfGui.States;
 using MaaWpfGui.Utilities;
@@ -36,9 +37,11 @@ using MaaWpfGui.ViewModels.UserControl.TaskQueue;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using Stylet;
+using static MaaWpfGui.Main.AsstProxy;
 using Application = System.Windows.Application;
 using IContainer = StyletIoC.IContainer;
 using Screen = Stylet.Screen;
+using Task = System.Threading.Tasks.Task;
 
 namespace MaaWpfGui.ViewModels.UI
 {
@@ -113,6 +116,11 @@ namespace MaaWpfGui.ViewModels.UI
         /// Gets 生稀盐酸任务Model
         /// </summary>
         public static ReclamationSettingsUserControlModel ReclamationTask => ReclamationSettingsUserControlModel.Instance;
+
+        /// <summary>
+        /// Gets 生稀盐酸任务Model
+        /// </summary>
+        public static CustomSettingsUserControlModel CustomTask => CustomSettingsUserControlModel.Instance;
 
         #endregion 长草任务Model
 
@@ -483,7 +491,7 @@ namespace MaaWpfGui.ViewModels.UI
 
             for (int i = 0; i < 8; ++i)
             {
-                if (!SettingsViewModel.TimerSettings.TimerModels.Timers[i].IsOn)
+                if (SettingsViewModel.TimerSettings.TimerModels.Timers[i].IsOn == false)
                 {
                     continue;
                 }
@@ -542,6 +550,8 @@ namespace MaaWpfGui.ViewModels.UI
             {
                 _logger.Information($"Scheduled start: Timer Index: {configIndex}");
                 await HandleScheduledStart(configIndex);
+
+                SettingsViewModel.TimerSettings.TimerModels.Timers[configIndex].IsOn ??= false;
             }
         }
 
@@ -652,6 +662,11 @@ namespace MaaWpfGui.ViewModels.UI
                 "Reclamation"
             ];
 
+            if (Instances.VersionUpdateViewModel.IsDebugVersion() || File.Exists("DEBUG") || File.Exists("DEBUG.txt"))
+            {
+                taskList.Add("Custom");
+            }
+
             var tempOrderList = new List<DragItemViewModel>(new DragItemViewModel[taskList.Count]);
             var nonOrderList = new List<DragItemViewModel>();
             for (int i = 0; i != taskList.Count; ++i)
@@ -663,7 +678,7 @@ namespace MaaWpfGui.ViewModels.UI
                     LocalizationHelper.GetString(task),
                     task,
                     "TaskQueue.",
-                    task is not ("AutoRoguelike" or "Reclamation"));
+                    task is not ("AutoRoguelike" or "Reclamation" or "Custom"));
 
                 if (task == TaskSettingVisibilityInfo.DefaultVisibleTaskSetting)
                 {
@@ -900,6 +915,10 @@ namespace MaaWpfGui.ViewModels.UI
                 FightTask.Stage2 = stage2;
                 FightTask.Stage3 = stage3;
                 FightTask.RemainingSanityStage = rss;
+                if (!FightTask.CustomStageCode)
+                {
+                    FightTask.RemoveNonExistStage();
+                }
 
                 Instances.TaskQueueViewModel.EnableSetFightParams = true;
             });
@@ -977,6 +996,7 @@ namespace MaaWpfGui.ViewModels.UI
                 {
                     case "AutoRoguelike":
                     case "Reclamation":
+                    case "Custom":
                         continue;
                 }
 
@@ -1080,6 +1100,7 @@ namespace MaaWpfGui.ViewModels.UI
                     {
                         case "AutoRoguelike":
                         case "Reclamation":
+                        case "Custom":
                             item.IsChecked = false;
                             continue;
                     }
@@ -1334,6 +1355,17 @@ namespace MaaWpfGui.ViewModels.UI
                         taskRet &= AppendReclamation();
                         break;
 
+                    case "Custom":
+                        {
+                            var tasks = CustomTask.SerializeMultiTasks();
+                            foreach (var (type, param) in tasks)
+                            {
+                                taskRet &= Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Custom, type, param);
+                            }
+
+                            break;
+                        }
+
                     default:
                         --count;
                         _logger.Error("Unknown task: " + item.OriginalName);
@@ -1345,7 +1377,7 @@ namespace MaaWpfGui.ViewModels.UI
                     continue;
                 }
 
-                AddLog(item.OriginalName + "Error", UiLogColor.Error);
+                AddLog($"{LocalizationHelper.GetString(item.OriginalName)} task append error", UiLogColor.Error);
                 taskRet = true;
                 --count;
             }
@@ -1524,59 +1556,18 @@ namespace MaaWpfGui.ViewModels.UI
             }
         }
 
-        private static bool AppendStart()
+        public static bool AppendStart()
         {
             var (type, param) = StartUpTask.Serialize();
-            return Instances.AsstProxy.AsstAppendTaskWithEncoding(AsstProxy.TaskType.StartUp, type, param);
+            return Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.StartUp, type, param);
         }
 
-        private bool AppendFight()
+        public bool AppendFight()
         {
-            int medicine = 0;
-            if (FightTask.UseMedicine)
-            {
-                if (!int.TryParse(FightTask.MedicineNumber, out medicine))
-                {
-                    medicine = 0;
-                }
-            }
-
-            int stone = 0;
-            if (FightTask.UseStone)
-            {
-                if (!int.TryParse(FightTask.StoneNumber, out stone))
-                {
-                    stone = 0;
-                }
-            }
-
-            int times = int.MaxValue;
-            if (FightTask.HasTimesLimited)
-            {
-                if (!int.TryParse(FightTask.MaxTimes, out times))
-                {
-                    times = 0;
-                }
-            }
-
-            if (!int.TryParse(FightTask.Series, out var series))
-            {
-                series = 1;
-            }
-
-            int dropsQuantity = 0;
-            if (FightTask.IsSpecifiedDrops)
-            {
-                if (!int.TryParse(FightTask.DropsQuantity, out dropsQuantity))
-                {
-                    dropsQuantity = 0;
-                }
-            }
-
             string curStage = FightTask.Stage;
 
-            bool mainFightRet = Instances.AsstProxy.AsstAppendFight(curStage, medicine, stone, times, series, FightTask.DropsItemId, dropsQuantity);
-
+            var (type, mainParam) = FightTask.Serialize();
+            bool mainFightRet = Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Fight, type, mainParam);
             if (!mainFightRet)
             {
                 AddLog(LocalizationHelper.GetString("UnsupportedStages") + ": " + curStage, UiLogColor.Error);
@@ -1593,14 +1584,32 @@ namespace MaaWpfGui.ViewModels.UI
                     }
 
                     AddLog(LocalizationHelper.GetString("AnnihilationTaskTip"), UiLogColor.Info);
-                    mainFightRet = Instances.AsstProxy.AsstAppendFight(stage, medicine, 0, int.MaxValue, series, string.Empty, 0);
+                    var task = mainParam.ToObject<AsstFightTask>();
+                    task.Stage = stage;
+                    task.Stone = 0;
+                    task.MaxTimes = int.MaxValue;
+                    task.Drops = [];
+                    mainFightRet = Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.FightRemainingSanity, type, task.Serialize().Params);
                     break;
                 }
             }
 
             if (mainFightRet && FightTask.UseRemainingSanityStage && !string.IsNullOrEmpty(FightTask.RemainingSanityStage))
             {
-                return Instances.AsstProxy.AsstAppendFight(FightTask.RemainingSanityStage, 0, 0, int.MaxValue, 1, string.Empty, 0, false);
+                var task = new AsstFightTask()
+                {
+                    Stage = FightTask.RemainingSanityStage,
+                    MaxTimes = int.MaxValue,
+                    Series = 1,
+                    IsDrGrandet = FightTask.IsDrGrandet,
+                    ReportToPenguin = SettingsViewModel.GameSettings.EnablePenguin,
+                    ReportToYituliu = SettingsViewModel.GameSettings.EnableYituliu,
+                    PenguinId = SettingsViewModel.GameSettings.PenguinId,
+                    YituliuId = SettingsViewModel.GameSettings.PenguinId,
+                    ServerType = Instances.SettingsViewModel.ServerType,
+                    ClientType = SettingsViewModel.GameSettings.ClientType,
+                };
+                return Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.FightRemainingSanity, type, task.Serialize().Params);
             }
 
             return mainFightRet;
@@ -1613,78 +1622,59 @@ namespace MaaWpfGui.ViewModels.UI
         /// </summary>
         public void SetFightParams()
         {
-            if (!EnableSetFightParams || !Instances.AsstProxy.ContainsTask(AsstProxy.TaskType.Fight))
+            var type = TaskType.Fight;
+            var id = Instances.AsstProxy.TaskStatus.ToList().FirstOrDefault(t => t.Value == type).Key;
+            if (!EnableSetFightParams || id == default)
             {
                 return;
             }
 
-            int medicine = 0;
-            if (FightTask.UseMedicine)
-            {
-                if (!int.TryParse(FightTask.MedicineNumber, out medicine))
-                {
-                    medicine = 0;
-                }
-            }
-
-            int stone = 0;
-            if (FightTask.UseStone)
-            {
-                if (!int.TryParse(FightTask.StoneNumber, out stone))
-                {
-                    stone = 0;
-                }
-            }
-
-            int times = int.MaxValue;
-            if (FightTask.HasTimesLimited)
-            {
-                if (!int.TryParse(FightTask.MaxTimes, out times))
-                {
-                    times = 0;
-                }
-            }
-
-            if (!int.TryParse(FightTask.Series, out var series))
-            {
-                series = 1;
-            }
-
-            int dropsQuantity = 0;
-            if (FightTask.IsSpecifiedDrops)
-            {
-                if (!int.TryParse(FightTask.DropsQuantity, out dropsQuantity))
-                {
-                    dropsQuantity = 0;
-                }
-            }
-
-            Instances.AsstProxy.AsstSetFightTaskParams(FightTask.Stage, medicine, stone, times, series, FightTask.DropsItemId, dropsQuantity);
+            var taskParams = FightTask.Serialize().Params;
+            Instances.AsstProxy.AsstSetTaskParamsEncoded(id, taskParams);
         }
 
-        public void SetFightRemainingSanityParams()
+        public static void SetFightRemainingSanityParams()
         {
-            if (!Instances.AsstProxy.ContainsTask(AsstProxy.TaskType.FightRemainingSanity))
+            var type = TaskType.FightRemainingSanity;
+            var id = Instances.AsstProxy.TaskStatus.ToList().FirstOrDefault(t => t.Value == type).Key;
+            if (id == default)
             {
                 return;
             }
 
-            Instances.AsstProxy.AsstSetFightTaskParams(FightTask.RemainingSanityStage, 0, 0, int.MaxValue, 1, string.Empty, 0, false);
+            var task = new AsstFightTask()
+            {
+                Stage = FightTask.RemainingSanityStage,
+                MaxTimes = int.MaxValue,
+                Series = 1,
+                IsDrGrandet = FightTask.IsDrGrandet,
+                ReportToPenguin = SettingsViewModel.GameSettings.EnablePenguin,
+                ReportToYituliu = SettingsViewModel.GameSettings.EnableYituliu,
+                PenguinId = SettingsViewModel.GameSettings.PenguinId,
+                YituliuId = SettingsViewModel.GameSettings.PenguinId,
+                ServerType = Instances.SettingsViewModel.ServerType,
+                ClientType = SettingsViewModel.GameSettings.ClientType,
+            };
+
+            var taskParams = task.Serialize().Params;
+            Instances.AsstProxy.AsstSetTaskParamsEncoded(id, taskParams);
         }
 
-        public void SetInfrastParams()
+        public static void SetInfrastParams()
         {
-            if (!Instances.AsstProxy.ContainsTask(AsstProxy.TaskType.Infrast))
+            const TaskType Type = TaskType.Infrast;
+            int id = Instances.AsstProxy.TaskStatus.ToList().FirstOrDefault(i => i.Value == Type).Key;
+            if (id == default)
             {
                 return;
             }
 
-            Instances.AsstProxy.AsstSetInfrastTaskParams();
+            var taskParams = InfrastSettingsUserControlModel.Instance.Serialize().Params;
+            Instances.AsstProxy.AsstSetTaskParamsEncoded(id, taskParams);
         }
 
-        private bool AppendInfrast()
+        public bool AppendInfrast()
         {
-            // 被RemoteControlService反射调用，暂不移除
             if (InfrastTask.CustomInfrastEnabled && (!File.Exists(InfrastTask.CustomInfrastFile) || InfrastTask.CustomInfrastPlanInfoList.Count == 0))
             {
                 AddLog(LocalizationHelper.GetString("CustomizeInfrastSelectionEmpty"), UiLogColor.Error);
@@ -1692,53 +1682,37 @@ namespace MaaWpfGui.ViewModels.UI
             }
 
             var (type, param) = InfrastTask.Serialize();
-            return Instances.AsstProxy.AsstAppendTaskWithEncoding(AsstProxy.TaskType.Infrast, type, param);
+            return Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Infrast, type, param);
         }
 
-        private readonly Dictionary<string, IEnumerable<string>> _blackCharacterListMapping = new()
+        public static bool AppendMall()
         {
-            { string.Empty, ["讯使", "嘉维尔", "坚雷"] },
-            { "Official", ["讯使", "嘉维尔", "坚雷"] },
-            { "Bilibili", ["讯使", "嘉维尔", "坚雷"] },
-            { "YoStarEN", ["Courier", "Gavial", "Dur-nar"] },
-            { "YoStarJP", ["クーリエ", "ガヴィル", "ジュナー"] },
-            { "YoStarKR", ["쿠리어", "가비알", "듀나"] },
-            { "txwy", ["訊使", "嘉維爾", "堅雷"] },
-        };
-
-        private bool AppendMall()
-        {
-            // 被RemoteControlService反射调用，暂不移除
             var (type, param) = MallTask.Serialize();
-            return Instances.AsstProxy.AsstAppendTaskWithEncoding(AsstProxy.TaskType.Mall, type, param);
+            return Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Mall, type, param);
         }
 
-        private static bool AppendAward()
+        public static bool AppendAward()
         {
-            // 被RemoteControlService反射调用，暂不移除
             var (type, param) = AwardTask.Serialize();
-            return Instances.AsstProxy.AsstAppendTaskWithEncoding(AsstProxy.TaskType.Award, type, param);
+            return Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Award, type, param);
         }
 
-        private static bool AppendRecruit()
+        public static bool AppendRecruit()
         {
-            // 被RemoteControlService反射调用，暂不移除
             var (type, param) = RecruitTask.Serialize();
-            return Instances.AsstProxy.AsstAppendTaskWithEncoding(AsstProxy.TaskType.Recruit, type, param);
+            return Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Recruit, type, param);
         }
 
-        private static bool AppendRoguelike()
+        public static bool AppendRoguelike()
         {
-            // 被RemoteControlService反射调用，暂不移除
             var (type, param) = RoguelikeTask.Serialize();
-            return Instances.AsstProxy.AsstAppendTaskWithEncoding(AsstProxy.TaskType.Roguelike, type, param);
+            return Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Roguelike, type, param);
         }
 
-        private static bool AppendReclamation()
+        public static bool AppendReclamation()
         {
-            // 被RemoteControlService反射调用，暂不移除
             var (type, param) = ReclamationTask.Serialize();
-            return Instances.AsstProxy.AsstAppendTaskWithEncoding(AsstProxy.TaskType.Reclamation, type, param);
+            return Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Reclamation, type, param);
         }
 
         /// <summary>

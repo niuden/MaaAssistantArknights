@@ -1,59 +1,62 @@
-## v5.15.0-beta.1
+## v5.15.2
+
+### Highlight
+
+本次更新我们带来了保全派驻新作业与自定义背景图片填充模式，修复若干已知问题，让牛牛跑得更快更稳~
+
+#### 保全派驻作业更新
+
+新增以下场景的保全派驻作业支持：
+- 阿卡胡拉丛林（萨拉托加）
+- 尚蜀夜市/多索雷斯在建地块/荒地群兽音乐厅（DL_君逸寒）
+
+#### 背景设置自定义升级
+
+「背景设置」新增自定义填充模式，可以放心选择喜欢的图片啦  
+（设置路径依然在「设置」→「背景设置」，搭配透明度食用更佳哦~）
+
+#### 问题修复专项
+
+- 修复导能元件选择异常
+- 解决线索窗口无法关闭的 BUG
+- 优化 OF-1 导航逻辑，适配新 UI
+- 修复理智勾选「指定材料」刷取「不选择」时 UI 崩溃 → [详情](https://www.bilibili.com/opus/1055580503270227987)
+
+----
+
+以下是详细内容：
 
 ### 新增 | New
 
-* 添加控件半透明背景色，新增自定义背景 (#12204) @ABA2396 @status102
-* YoStarEN Sarkaz theme + JP and KR template optimization @Constrat
-* 新增 MirrorChyan ErrorCode 提示 (#12202) @ABA2396
-* Telegram Topic notification (#12188) @Constrat
-* 任务列表支持多个开始唤醒，以实现多账号 (#12144) @hguandl
-* SSS#6 for EN (#12168) @dragonheart107
-* check nightly version with mirrorchyan (#12173) @MistEO
-* 调整下载来源提示 (#12156) @MistEO
+* 新增 阿卡胡拉丛林 保全派驻作业 (#12375) @Saratoga-Official
+* 新增 尚蜀夜市、多索雷斯在建地块、荒地群兽音乐厅 保全派驻作业 (#12370, #12374) @junyihan233
+* Background stretch modes (#12365) @BxFS @ABA2396
+* 在肉鸽招募中增加m3作为群奶 (#12353) @Cerulime
 
 ### 改进 | Improved
 
-* 孤星搓玉关 @Daydreamer114
-* 资源更新换一个解压目录 (#12153) @MistEO
-* 自动战斗开始前仅移除相似的召唤物头像缓存 @status102
+* 基建干员选择滑动优化 @status102
+* 加快无基建技能干员选择速度，加快选择列表回正速度 (#12363) @ABA2396
+* 优化 OF-1 截图 @ABA2396
 
 ### 修复 | Fix
 
-* CheckLevelMax ocr target "-" -> digits (#12223) @BxFS
-* handle leak @dantmnf
-* YostarKR lower StartToVisit templThreshold (#12193) @HX3N
-* 保全开始部署 点击过快导致点击无效 (#12185) @Daydreamer114
-* 自动战斗在开启战斗列表时导入作业后，关闭战斗列表开始任务时作业使用错误 @status102
-* SSS#6 directional EC and branches @Constrat
-* 控制中枢模板mask (#12177) @Daydreamer114
-* 繁中服_生息演算組裝道具後卡住 (#12182) @momomochi987 @Daydreamer114
-* xaml requires &#160; @Constrat
-* 钼铅识别错误 @ABA2396
-* update version.json on Arknights-Tile-Pos changes fix 43c672df541bae77b484c2faeb23c4522230e3ca @Constrat
-* roguelike already left encounter check and return from map screen (#12088) @BxFS
+* 自动战斗卡子弹时间，锁干员导致cache混乱 (#12369) @Alan-Charred
+* EN SSS buffs regex @Constrat
+* 导能元件界面更改 @ABA2396
+* 刷理智掉落物指定参数异常检查 @status102
+* 无法关闭线索窗口 @ABA2396
 
 ### 文档 | Docs
 
-* add space @MistEO
+* 优化文档 (#12361) @SherkeyXD @Rbqwow
+* add glossary missing operator name (#12360) @rosmontisu
 
 ### 其他 | Other
 
-* 繁中服「生路」活動導航 (#12224) @momomochi987
-* YostarKR Sarkaz Theme (#12220) @HX3N
-* gpu 选项禁用滚轮切换 @ABA2396
-* YostarJP Sarkaz Theme (#12216) @Manicsteiner
-* YostarJP 琳琅诗怀雅 ocr fix (#12219) @Manicsteiner
-* update wording about mirrorchyan (#12208) @MistEO
-* add delay pre UnlockClues @Constrat
-* YostarKR SSS#6 BuffChoose (#12191) @HX3N
-* update issue_template to remove new lines for EN @Constrat
-* 移除过时的重连代码 @ABA2396
-* tweak SSS files for global @Constrat
-* tweaked SSS copilot operators output @Constrat
-* add space after `:` @Constrat
-* YostarJP EnterInfrastDelicious (#12176) @Manicsteiner
-* 繁中服_聲浪安保派駐_定向導能元件 (#12174) @momomochi987
-* set output to UTF_8 for ResourceUpdater @Constrat
-* manual update version @MistEO
-* Revert "fix: roguelike already left encounter check and return from map screen (#12088)" @status102
-* Wpf肉鸽任务序列化 (#12124) @status102
+* 更新Mirror酱下载为按钮，保持动画一致 @ChingCdesu
+* 移除battleHelper中的BestMatcher复用 (#12136) @status102
+* 优化界面显示 @ABA2396
+* tile resource (#12372) @MistEO @github-actions[bot]
+* KR translation tweaks (#12366) @HX3N
+* 自动战斗加点输出 @status102

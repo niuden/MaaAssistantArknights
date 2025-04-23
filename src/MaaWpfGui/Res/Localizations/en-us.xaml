@@ -14,10 +14,20 @@
     <system:String x:Key="StartupSettings">Startup</system:String>
     <system:String x:Key="ScheduleSettings">Schedule</system:String>
     <system:String x:Key="UiSettings">GUI</system:String>
+    <system:String x:Key="BackgroundSettings">Background Setting</system:String>
+    <system:String x:Key="BackgroundImage">Background Image</system:String>
+    <system:String x:Key="BackgroundOpacity">Background Opacity</system:String>
+    <system:String x:Key="BackgroundBlurRadius">Background Blur Radius</system:String>
+    <system:String x:Key="BackgroundImageStretchMode">Background Stretch Mode</system:String>
+    <system:String x:Key="BackgroundImageStretchModeNone">None</system:String>
+    <system:String x:Key="BackgroundImageStretchModeFill">Fill</system:String>
+    <system:String x:Key="BackgroundImageStretchModeUniform">Uniform (Fit)</system:String>
+    <system:String x:Key="BackgroundImageStretchModeUniformToFill">Uniform to Fill (Cover)</system:String>
     <system:String x:Key="UiTheme">UI Theme</system:String>
     <system:String x:Key="HotKeySettings">HotKeys</system:String>
     <system:String x:Key="UpdateSettings">Update</system:String>
     <system:String x:Key="AboutUs">About us</system:String>
+    <system:String x:Key="IssueReport">Issue Report</system:String>
     <system:String x:Key="MaaVersion">MAA Version</system:String>
     <system:String x:Key="BuildDateTime">Build Date</system:String>
     <system:String x:Key="CoreVersion">Core Version</system:String>
@@ -29,7 +39,8 @@
     <system:String x:Key="ExternalNotificationSettings">External notifications</system:String>
     <system:String x:Key="ExternalNotificationEnabled">Enabled configuration</system:String>
     <system:String x:Key="ExternalNotificationEnableDetails">Output Detailed Information</system:String>
-    <system:String x:Key="ExternalNotificationSendWhenError">Send additional notification when task fails</system:String>
+    <system:String x:Key="ExternalNotificationSendWhenComplete">タスク完了時に通知を送信</system:String>
+    <system:String x:Key="ExternalNotificationSendWhenError">Send notification when task fails</system:String>
     <system:String x:Key="ExternalNotificationSendSuccess">Send successfully</system:String>
     <system:String x:Key="ExternalNotificationSendFail">Send failed</system:String>
     <system:String x:Key="ExternalNotificationSendTest">Send Test</system:String>
@@ -64,6 +75,9 @@
     <!--  Settings Guide  -->
     <system:String x:Key="TaskSettings">Task Settings</system:String>
     <system:String x:Key="SettingsGuide">Settings Guide</system:String>
+    <system:String x:Key="GuideStepClarification" xml:space="preserve">Make sure ADB is enabled:
+• BlueStacks: Settings → Advanced → Android Debug Bridge → Enable
+• LDPlayer: Settings → Others → ADB debugging → Enable local connection</system:String>
     <system:String x:Key="PrevGuide">Prev</system:String>
     <system:String x:Key="NextGuide">Next</system:String>
     <system:String x:Key="DoneGuide">Done</system:String>
@@ -155,7 +169,7 @@
     <system:String x:Key="RoguelikeMonthlySquadAutoIterate">Monthly Squad Auto-Switch</system:String>
     <system:String x:Key="RoguelikeMonthlySquadCheckComms">Monthly Squad Communication</system:String>
     <system:String x:Key="RoguelikeDeepExplorationAutoIterate">Deep Investigation Auto-Switch</system:String>
-    <system:String x:Key="DeploymentWithPause" xml:space="preserve">Pause Deployment (Pause Trick) (Experimental)</system:String>
+    <system:String x:Key="DeploymentWithPause" xml:space="preserve">Pause Trick (Experimental)</system:String>
     <system:String x:Key="AdbLiteEnabled">Use ADB Lite (Experimental)</system:String>
     <system:String x:Key="KillAdbOnExit">Kill ADB On Exit</system:String>
     <system:String x:Key="DefaultSquad">Default Squad</system:String>
@@ -250,12 +264,22 @@ You can cancel this popup by clicking the Settings - About Us - Issue Reporting 
     <system:String x:Key="ShowChangelog">Changelog</system:String>
     <system:String x:Key="ResourceUpdate">Resource update</system:String>
     <system:String x:Key="UpdateSource">Update Source</system:String>
+    <system:String x:Key="UpdateSourceTip" xml:space="preserve">
+🌏 Using overseas source:
+    ● Software version: Update checks via API provided by MAA Team, automatically pulls update packages from GitHub or CN Mirrors provided by MAA Team
+    ● Resource version: Free update detection provided by MirrorChyan, manually click 「Resource update」 in settings to download from GitHub
+
+🔑 Using MirrorChyan:
+    ● Software and resources are prioritized for high-speed download via MirrorChyan
+    ● Additional automatic updates for resource version provided
+</system:String>
     <system:String x:Key="GlobalSource">Global Source</system:String>
     <system:String x:Key="ForceGithubGlobalSource">Force using GitHub</system:String>
     <system:String x:Key="MirrorChyan">MirrorChyan</system:String>
     <system:String x:Key="MirrorChyanCdkPlaceholder">Fill after switching source</system:String>
     <system:String x:Key="MirrorChyanSoftwareUpdateTip">Software update detected. Please go to 「Settings - Update Settings」 to configure MirrorChyan CDK or switch to Global Source.</system:String>
-    <system:String x:Key="MirrorChyanResourceUpdateTip">Resource update {0} detected. Please go to 「Settings- Update Settings- Resource Update」 to update manually, or fill in MirrorChayn CDK to update automatically.</system:String>
+    <system:String x:Key="MirrorChyanResourceUpdateTip">Resource update {0} detected. Please go to 「Settings- Update Settings - Resource Update」 to update manually, or fill in MirrorChayn CDK to update automatically.</system:String>
+    <system:String x:Key="MirrorChyanResourceUpdateShortTip">Resource update {0} detected</system:String>
     <system:String x:Key="MirrorChyanCdkExpired">The CDK has expired. Please use a new CDK for authorization.</system:String>
     <system:String x:Key="MirrorChyanCdkInvalid">The CDK is invalid. Please check if the input is correct.</system:String>
     <system:String x:Key="MirrorChyanCdkQuotaExhausted">The CDK has reached the maximum download limit for today. Please try again tomorrow.</system:String>
@@ -312,6 +336,8 @@ You can cancel this popup by clicking the Settings - About Us - Issue Reporting 
     <system:String x:Key="EmulatorPathSelectionErrorPrompt">Do you also want to order a bar in a bar?</system:String>
     <system:String x:Key="EmulatorPathSelectionErrorImSure">I'm sure I haven't selected the wrong one</system:String>
     <system:String x:Key="EmulatorPathSelectionErrorSelectAgain">Okay, I will choose again</system:String>
+    <system:String x:Key="EmulatorPathNotExist">The emulator path does not exist</system:String>
+    <system:String x:Key="EmulatorPathEmptyWarning">The emulator path is empty, 「{0}」 and 「{1}」 check states have been reset</system:String>
     <system:String x:Key="Select">Select</system:String>
     <system:String x:Key="ForcedReplaceAdb">Replace ADB</system:String>
     <system:String x:Key="TouchMode">Touch Mode</system:String>
@@ -695,7 +721,7 @@ The video aspect ratio needs to be 16:9 without interference factors such as bla
         3. For SSS, there are multiple built-in files under the 「resource/copilot」 folder.\n
         Please start on the 「Start Deployment」 screen after manual formation (can be used with 「Loop Times」 )\n\n
         4. You need turn off the 「Auto Squad」 when using a friendly support unit, then start with your support unit selected.\n\n
-        5. Enabling the 「Favourite」 feature may affect the operator selection in 「Auto Squad」 . It is recommended to turn off 「Favourite」 when using 「Auto Squad」 , or manually supplement missing operators to ensure the formation is complete.\n\n
+        5. Marking an operator as「Favourite」 may affect the operator selection in 「Auto Squad」 . It is recommended to turn off 「Favourite」 when using 「Auto Squad」 , or manually supplement missing operators to ensure the formation is complete.\n\n
         6. In the Copilot workstation, you can paste the mysterious code by clicking the paste button on the right side of the input box. Left-click to paste a single job, and right-click to paste the entire job set.\n\n
         7. Battle list:\n
         After selecting the job, check that the stage name below the list is correct (e.g.: CV-EX-1). \n
@@ -871,9 +897,17 @@ The video aspect ratio needs to be 16:9 without interference factors such as bla
     <system:String x:Key="QqChannel">QQ channel</system:String>
     <system:String x:Key="Telegram">Telegram</system:String>
     <system:String x:Key="Discord">Discord</system:String>
+    <!--  !About  -->
+    <!--  Issues  -->
+    <system:String x:Key="CheckHelpBeforeReportingIssue">Please check the FAQ before reporting any issues</system:String>
+    <system:String x:Key="CheckUpdateBeforeReportingIssue">Please upgrade first and test if the issue persists in the new version. Confirm it's not a common issue before reporting.</system:String>
     <system:String x:Key="Help">FAQ</system:String>
     <system:String x:Key="Issue">Issues</system:String>
-    <!--  !About  -->
+    <system:String x:Key="GenerateSupportPayload">Generate Support Payload</system:String>
+    <system:String x:Key="OpenDebugFolder">Open Debug Folder</system:String>
+    <system:String x:Key="GenerateSupportPayloadSuccessful">Support payload generated successfully</system:String>
+    <system:String x:Key="GenerateSupportPayloadException">An error occurred while generating the support payload:</system:String>
+    <!--  !Issues  -->
     <!--  AutoRecruitSettings  -->
     <system:String x:Key="AutoRefresh">Auto refresh 3★ Tags</system:String>
     <system:String x:Key="ForceRefresh">Continue trying to refresh Tags without recruitment permit</system:String>
@@ -895,6 +929,21 @@ The video aspect ratio needs to be 16:9 without interference factors such as bla
     <system:String x:Key="DrunkAndStaggering">Ah, doctor, why do you sway so much in your movement today?</system:String>
     <system:String x:Key="Hangover">I won't drink so much next time……</system:String>
     <system:String x:Key="HelloWorld">Hello World!</system:String>
+    <system:String x:Key="EasterEggsRules" xml:space="preserve">1. The official version of MAA will not have Debug mode. If you see a Debug option while running, close the software immediately, do not click it, and contact the nearest MAA developer.\n
+2. Infrastructure shift changes are automatic. If you find an operator working continuously for more than 72 hours, manually adjust the shifts and check if the system time is correct.\n
+3. Recruitment tags will not change. If you notice tags changing before the countdown ends, do not continue recruiting. Restart MAA and try again.\n
+4. MAA will not send friend requests. If you receive a friend request from "MAA_System," do not accept it and delete the account.\n
+5. Roguelike assistance only provides suggestions. If the game automatically selects a non-existent option, force quit and restart the client.\n
+6. MAA's log files should not contain garbled text. If you find logs with errors other than "ERROR: Data parsing failed," delete the logs and reinstall the software.\n
+7. Night mode is safe. However, if MAA starts automatically at 3:33 AM and runs "unknown tasks," unplug the power and wait until sunrise to use it again.\n
+8. The last rule does not exist. If you see this, forget it and use MAA as usual.\n
+9. Do not click on炒...锟斤拷拷拷拷喜报拷拷拷饭 in MAA.\n
+10. MirrorChyan is kind. You only need to pay a small price to receive its protection.\n
+11. MAA does not support future versions. If the software updates to an unreleased version number (e.g., v10.0.0), do not run it and wait for an official announcement.\n
+12. MAA has no voice prompts. If you hear whispers, laughter, or non-program-generated voices, turn off the speakers and check for unknown scripts running.\n
+13. MAA will not update at midnight on Sunday. If you receive an update prompt, ignore it and do not check the update announcement until Monday.
+    </system:String>
+    <system:String x:Key="EmployeeGuidelines">Employee Guidelines</system:String>
     <!--  !EasterEggs  -->
     <!--  VersionUpdatePopup  -->
     <system:String x:Key="UpdateNotificationOk">OK!</system:String>
@@ -906,7 +955,7 @@ The video aspect ratio needs to be 16:9 without interference factors such as bla
     <system:String x:Key="ConfirmExitText">Are you sure want to exit?</system:String>
     <!--  !RootViewModel  -->
     <!--  Api  -->
-    <system:String x:Key="ApiUpdateSuccess">Stage data retrieval successful</system:String>
+    <system:String x:Key="ApiUpdateSuccess">Hot update data retrieval successful</system:String>
     <system:String x:Key="GameResourceUpdating">Game resources are being updated.</system:String>
     <system:String x:Key="GameResourceUpdatingMirrorChyan">Updating resource {0} from 「MirrorChyan」...</system:String>
     <system:String x:Key="GameResourceUpdatePreparing">Indexing in progress</system:String>

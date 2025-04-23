@@ -21,14 +21,14 @@ import {
 } from 'react'
 import { useMount } from 'react-use'
 
-import { downloadBlob } from '../../../utils/blob'
+import { downloadBlob } from '@/utils/blob'
 import {
   checkUrlConnectivity,
   checkUrlSpeed,
   download,
-} from '../../../utils/fetch'
-import { formatBytes } from '../../../utils/format'
-import sleep from '../../../utils/sleep'
+} from '@/utils/fetch'
+import { formatBytes } from '@/utils/format'
+import sleep from '@/utils/sleep'
 import {
   DetectionFailedSymbol,
   PLATFORMS,
@@ -60,17 +60,17 @@ const DataLoadRate: FC<{ loaded: number; total: number }> = ({
   return (
     <div className="flex flex-row items-center justify-center gap-2 font-mono">
       <div className="flex flex-col items-start justify-center gap-1">
-        <div className="text-sm">{percentage.toFixed(0)}%</div>
-        <div className="w-12 h-1 bg-white/10 rounded-full">
+        <div className="text-sm transition-colors duration-300">{percentage.toFixed(0)}%</div>
+        <div className={clsx("w-12 h-1 rounded-full", "dark:bg-white/10" , "bg-stone-800/10")}>
           <div
-            className="h-full rounded-full bg-white"
+            className={clsx("h-full rounded-full", 'dark:text-white', 'text-stone-800')}
             style={{ width: `${percentage}%` }}
           />
         </div>
       </div>
       <div className="flex flex-col items-end justify-center">
-        <div className="text-sm">{formatBytes(loaded, 1)}</div>
-        <div className="text-sm">{formatBytes(total, 1)}</div>
+        <div className="text-sm transition-colors duration-300">{formatBytes(loaded, 1)}</div>
+        <div className="text-sm transition-colors duration-300">{formatBytes(total, 1)}</div>
       </div>
     </div>
   )
@@ -90,7 +90,8 @@ export const DownloadState: FC<DownloadStateProps> = forwardRef<
   return (
     <motion.div
       className={clsx(
-        'flex py-6 px-3 flex-col items-center justify-center text-white font-normal',
+        'flex py-6 px-3 flex-col items-center justify-center font-normal transition-colors duration-300',
+        'dark:text-white', 'text-stone-800',
         className,
       )}
       {...{
@@ -115,8 +116,8 @@ export const DownloadState: FC<DownloadStateProps> = forwardRef<
       ref={ref}
     >
       <div className="flex items-center -ml-1">
-        <Icon className={iconClassName} icon={icon} fontSize="28px" />
-        <span className="ml-2">{title}</span>
+        <Icon className={clsx(iconClassName, "transition-colors duration-300")} icon={icon} fontSize="28px" />
+        <span className="ml-2 transition-colors duration-300">{title}</span>
       </div>
     </motion.div>
   )
@@ -159,10 +160,13 @@ type DownloadDetectionStates =
       state: 'fallback'
     }
 
-const DownloadButton: FC<{
-  platform: ResolvedPlatform
-  releaseName: string | null
-}> = ({ platform, releaseName }) => {
+const DownloadButton = forwardRef<
+  HTMLDivElement,
+  {
+    platform: ResolvedPlatform
+    releaseName: string | null
+  }
+>(({ platform, releaseName }, ref) => {
   const href = platform.asset.browser_download_url
 
   const [loadState, setLoadState] = useState<DownloadDetectionStates>({
@@ -435,7 +439,7 @@ const DownloadButton: FC<{
       />
     )
   }
-}
+})
 
 export const DownloadButtons: FC<{ release: Release }> = ({ release }) => {
   const [viewAll, setViewAll] = useState(false)
@@ -493,6 +497,17 @@ export const DownloadButtons: FC<{ release: Release }> = ({ release }) => {
     }
   }, [validPlatforms, viewAll, envPlatformId])
 
+  const [os, arch] = useMemo(() => {
+    if (!envPlatformId) return ['unknown', 'unknown']
+    return envPlatformId.toString()
+      .replace(/macos-universal/i, 'macos-arm64')
+      .split('-')
+  }, [envPlatformId])
+
+  const mirrorchyanAvailable = useMemo(() => {
+    return os === 'windows' || os === 'macos'
+  }, [os, arch])
+
   if (!envPlatformId) {
     return (
       <DownloadState
@@ -515,22 +530,29 @@ export const DownloadButtons: FC<{ release: Release }> = ({ release }) => {
         />
       )}
       {!viewAll && (
-        <div className="flex-row gap-4 items-center flex flex-col md:flex-row">
+        <div className="gap-4 items-center flex flex-col md:flex-row">
           <GlowButton
             key="view-all-switch"
             bordered
             onClick={() => setViewAll(true)}
           >
-            查看全部
+            <div className="text-base">
+                查看全部
+            </div>
           </GlowButton>
-          <div className="text-xs leading-5 text-center text-white/70">
-            <a href="https://mirrorchyan.com/zh/download?rid=MAA&os=windows&arch=x64&channel=stable" target="_blank">
-              <span><i><u>已有 Mirror酱 CDK？</u></i></span>
-              <br></br>
-              <span><i><u>前往 Mirror酱 高速下载</u></i></span>
-            </a>
-          </div>
         </div>
+      )}
+      {!viewAll && mirrorchyanAvailable && (
+        <GlowButton
+          key="mirrorchyan"
+          bordered
+          href={`https://mirrorchyan.com/zh/projects?rid=MAA&os=${os}&arch=${arch}&channel=stable`}
+        >
+          <div className="text-sm">
+            <p><i>已有 Mirror酱 CDK？</i></p>
+            <p><i>前往 Mirror酱 高速下载</i></p>
+          </div>
+        </GlowButton>
       )}
     </AnimatePresence>
   )

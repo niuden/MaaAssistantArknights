@@ -41,6 +41,7 @@
     <system:String x:Key="ExternalNotificationEnableDetails">輸出詳細信息</system:String>
     <system:String x:Key="ExternalNotificationSendWhenComplete">任務完成後發送通知</system:String>
     <system:String x:Key="ExternalNotificationSendWhenError">任務出錯時發送通知</system:String>
+    <system:String x:Key="ExternalNotificationSendWhenTimeout">任務超時時發送通知</system:String>
     <system:String x:Key="ExternalNotificationSendSuccess">發送成功</system:String>
     <system:String x:Key="ExternalNotificationSendFail">發送失敗</system:String>
     <system:String x:Key="ExternalNotificationSendTest">發送測試</system:String>
@@ -394,7 +395,7 @@
     <system:String x:Key="Drink">要來一杯美酒嗎🍷？博士</system:String>
     <system:String x:Key="ForceShoppingIfCreditFull">信用溢出時無視黑名單</system:String>
     <system:String x:Key="OnlyBuyDiscount">只購買打折的信用商品</system:String>
-    <system:String x:Key="ReserveMaxCredit">300以下信用點停止購買商品</system:String>
+    <system:String x:Key="ReserveMaxCredit">300 以下信用點停止購買商品</system:String>
     <system:String x:Key="OnlyBuyDiscountTips">⚠可能會導致信用點數溢出！仍然會購買未打折的商品！</system:String>
     <system:String x:Key="ReserveMaxCreditTips">低於 300 信用點數也仍然會購買白名單物品！</system:String>
     <system:String x:Key="CreditFullOnlyBuyDiscount">博士! \n只購買折扣商品讓信用點數溢出了！\n小心信用點數浪費哦！\n剩餘信用點數：</system:String>
@@ -1028,4 +1029,9 @@ C:\\leidian\\LDPlayer9。\n
     <!--  SimpleEncryptionHelper  -->
     <system:String x:Key="EncryptionError">加解密失敗，請重新配置相關設置，否則加密內容將以明文形式存儲在配置文件中。</system:String>
     <!--  !SimpleEncryptionHelper  -->
+    <!--  TimeOutTimer  -->
+    <system:String x:Key="TaskTimeoutMinutes">任務超時時間（分鐘）</system:String>
+    <system:String x:Key="ReminderIntervalMinutes">提醒間隔時間（分鐘）</system:String>
+    <system:String x:Key="TaskTimeoutWarning">任務已運行超過 {0} 分鐘（當前已運行 {1} 分鐘），請檢查是否需要手動干預。</system:String>
+    <!--  !TimeOutTimer  -->
 </ResourceDictionary>

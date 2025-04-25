@@ -41,6 +41,7 @@
     <system:String x:Key="ExternalNotificationEnableDetails">输出详细信息</system:String>
     <system:String x:Key="ExternalNotificationSendWhenComplete">任务完成后发送通知</system:String>
     <system:String x:Key="ExternalNotificationSendWhenError">任务出错时发送通知</system:String>
+    <system:String x:Key="ExternalNotificationSendWhenTimeout">任务超时时发送通知</system:String>
     <system:String x:Key="ExternalNotificationSendSuccess">发送成功</system:String>
     <system:String x:Key="ExternalNotificationSendFail">发送失败</system:String>
     <system:String x:Key="ExternalNotificationSendTest">发送测试</system:String>
@@ -394,9 +395,9 @@
     <system:String x:Key="Drink">要来一杯美酒吗🍷？博士</system:String>
     <system:String x:Key="ForceShoppingIfCreditFull">信用溢出时无视黑名单</system:String>
     <system:String x:Key="OnlyBuyDiscount">只购买打折的信用商品</system:String>
-    <system:String x:Key="ReserveMaxCredit">信用点低于300时停止购买商品</system:String>
+    <system:String x:Key="ReserveMaxCredit">信用点低于 300 时停止购买商品</system:String>
     <system:String x:Key="OnlyBuyDiscountTips">⚠ 注意：可能会导致信用点数溢出！仍然会购买未打折的白名单物品！</system:String>
-    <system:String x:Key="ReserveMaxCreditTips">低于300信用点也仍然会购买白名单物品！</system:String>
+    <system:String x:Key="ReserveMaxCreditTips">低于 300 信用点也仍然会购买白名单物品！</system:String>
     <system:String x:Key="CreditFullOnlyBuyDiscount">博士！ \n只购买折扣商品让信用点数溢出了！\n小心信用点数浪费哦！\n剩余信用点数：</system:String>
     <system:String x:Key="ReceiveDailyAndWeeklyAward">领取每日/每周任务奖励</system:String>
     <system:String x:Key="ReceiveMail">领取所有邮件奖励</system:String>
@@ -1027,4 +1028,9 @@ C:\\leidian\\LDPlayer9。\n
     <!--  SimpleEncryptionHelper  -->
     <system:String x:Key="EncryptionError">加解密失败，请重新配置相关设置，否则加密内容将以明文形式存储在配置文件中。</system:String>
     <!--  !SimpleEncryptionHelper  -->
+    <!--  TimeOutTimer  -->
+    <system:String x:Key="TaskTimeoutMinutes">任务超时时间（分钟）</system:String>
+    <system:String x:Key="ReminderIntervalMinutes">提醒间隔时间（分钟）</system:String>
+    <system:String x:Key="TaskTimeoutWarning">任务已运行超过 {0} 分钟（当前已运行 {1} 分钟），请检查是否需要手动干预。</system:String>
+    <!--  !TimeOutTimer  -->
 </ResourceDictionary>
